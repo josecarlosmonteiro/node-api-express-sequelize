@@ -1,27 +1,44 @@
 const Product = require('../models/product');
 
-const product = new Product();
+const findAll = async (req, res) => {
+  try {
+    const data = await Product.findAll();
+    return res.json({ content: data });
+  } catch (error) {
+    console.log("Erro ao buscar dados no banco");
+    console.log(error.message);
 
-const findAll = (req, res) => {
-  const data = product.findAll();
+    res.json({
+      notification: error.message,
+    })
+  }
 
-  return res.json({ content: data });
 }
 
-const findOne = (req, res) => {
-  const { id } = req.params;
+const findOne = async (req, res) => {
+  try {
+    const { id } = req.params;
 
-  const product = product.findOne(el => el.id === Number(id));
+    const product = await Product.findOne({ id });
 
-  return res.json({ content: product || null });
+    return res.json({ content: product || null });
+  } catch (error) {
+    console.log("Erro ao buscar dado pelo ID.");
+
+    res.json({ notification: error.message });
+  }
 }
 
-const create = (req, res) => {
-  const { name, value } = req.params;
+const create = async (req, res) => {
+  try {
+    const { name, value } = req.params;
+    const data = await Product.create({ name, value });
 
-  const data = product.insert({ name, value: Number(value) });
-
-  return res.json({ content: data });
+    return res.json({ content: data });
+  } catch (error) {
+    console.log("Erro ao criar novo produto");
+    return res.json({ notification: error.message });
+  }
 }
 
 module.exports = {
