@@ -1,11 +1,11 @@
 const router = require('express').Router();
 
-const products = require('./products');
-
 router.get('/', (req, res) => {
   res.json({ message: "Server running!" });
 })
 
-router.use('/products', products);
+require('./author')(router);
+require('./genders')(router);
+require('./book')(router);
 
 module.exports = router;
